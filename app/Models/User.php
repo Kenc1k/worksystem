@@ -51,4 +51,8 @@ class User extends Authenticatable
     {
         $this->hasMany(Hudud::class);
     }
+    public function topshiriq()
+    {
+        return $this->hasMany(Topshiriq::class); // Replace `Topshiriq` with the actual task model name
+    }
 }

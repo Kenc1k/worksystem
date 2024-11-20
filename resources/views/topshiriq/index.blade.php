@@ -10,7 +10,7 @@
         <table class="table mt-3">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">ID</th>
                     <th scope="col">Title</th>
                     <th scope="col">Category</th>
                     <th scope="col">Ijrochi</th>

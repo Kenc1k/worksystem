@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Hudud;
+use App\Models\HududTopshiriq;
 use App\Models\Topshiriq;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class TopshiriqController extends Controller
 {
@@ -125,4 +128,32 @@ class TopshiriqController extends Controller
 
         return redirect('/topshiriq');
     }
+    public function userTasks()
+    {
+        // Get the currently logged-in user's ID
+        $userId = FacadesAuth::id();
+    
+        // Fetch tasks for the logged-in user
+        $tasks = HududTopshiriq::select(
+                'hudud_topshiriqs.id as task_id',
+                'hududs.name as hudud_name',
+                'hudud_topshiriqs.status',
+                'topshiriqs.muddat' // Fetch muddat from topshiriqs
+            )
+            ->join('hududs', 'hudud_topshiriqs.hudud_id', '=', 'hududs.id')
+            ->join('topshiriqs', 'hudud_topshiriqs.topshiriq_id', '=', 'topshiriqs.id') // Join with topshiriqs
+            ->where('hududs.user_id', $userId)
+            ->get();
+    
+        // Pass the tasks to the view
+        return view('user_task.topshiriq', compact('tasks'));
+    }
+    public function myTasks()
+    {
+        $tasks = auth()->user()->tasks; // Retrieve tasks for the logged-in user
+
+        return view('user_task.topshiriq', compact('tasks'));
+    }
+    
+    
 }

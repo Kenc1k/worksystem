@@ -1231,6 +1231,7 @@
                     "src/Illuminate/Log/functions.php",
                     "src/Illuminate/Support/functions.php",
                     "src/Illuminate/Support/helpers.php"
+                    
                 ],
                 "psr-4": {
                     "Illuminate\\": "src/Illuminate/",

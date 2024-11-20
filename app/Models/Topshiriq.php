@@ -17,6 +17,10 @@ class Topshiriq extends Model
         'file',
         'muddat',
     ];
+    protected $casts = [
+        'muddat' => 'date',
+    ];
+    
 
     public function category()
     {

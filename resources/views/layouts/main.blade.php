@@ -22,7 +22,7 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="index3.html" class="brand-link">
       <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">AdminLTE 3</span>
+      <span class="brand-text font-weight-light">Task system</span>
     </a>
 
     <div class="sidebar">
@@ -31,7 +31,7 @@
           <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block">Isabekov Iskandar</a>
         </div>
       </div>
 
@@ -46,45 +46,57 @@
         </div>
       </div>
 
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-
-          <li class="nav-item menu-open">
-            <a href="#" class="nav-link active">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>
-                Dashboard
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{route('users.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Users</p>
-                </a>
+      @php
+      $user = Auth::user();
+      @endphp
+  
+  <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+  
+          @if ($user->role === 'admin')
+              <li class="nav-item menu-open">
+                  <a href="#" class="nav-link active">
+                      <i class="nav-icon fas fa-tachometer-alt"></i>
+                      <p>All CRUDs <i class="right fas fa-angle-left"></i></p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                          <a href="{{ route('users.index') }}" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Users</p>
+                          </a>
+                      </li>
+                      <li class="nav-item">
+                          <a href="{{ route('category.index') }}" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Categories</p>
+                          </a>
+                      </li>
+                      <li class="nav-item">
+                          <a href="{{ route('hudud.index') }}" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Hudud</p>
+                          </a>
+                      </li>
+                      <li class="nav-item">
+                          <a href="{{ route('topshiriq.index') }}" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Topshiriq</p>
+                          </a>
+                      </li>
+                  </ul>
               </li>
+          @else
               <li class="nav-item">
-                <a href="{{route('category.index')}}" class="nav-link ">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Categories</p>
-                </a>
+                  <a href="{{ route('topshiriq.myTasks') }}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>My Tasks</p>
+                  </a>
               </li>
-              <li class="nav-item">
-                <a href="{{route('hudud.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Hudud</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{route('topshiriq.index')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Topshiriq</p>
-                </a>
-              </li>
-            </ul>
-        </ul>
-      </nav>
+          @endif
+      </ul>
+  </nav>
+  
     </div>
   </aside>
 
