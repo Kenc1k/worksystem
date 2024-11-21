@@ -9,9 +9,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 Route::middleware('auth')->group(function () {
-    // Admin routes
     Route::prefix('admin')->group(function () {
-        Route::resource('user', UserController::class);
+        Route::resource('users', UserController::class);
         Route::resource('category', CategoryController::class);
         Route::resource('hudud', HududController::class);
         Route::resource('topshiriq', TopshiriqController::class);
@@ -21,9 +20,9 @@ Route::middleware('auth')->group(function () {
     
 });
 
-Route::get('/', [AuthController::class, 'loginPage'])->name('loginPage'); // GET login page
-Route::post('login', [AuthController::class, 'login']); // POST login form submission
-Route::post('logout', [AuthController::class, 'logout'])->name('logout'); // Logout route
+Route::get('/', [AuthController::class, 'loginPage'])->name('loginPage'); 
+Route::post('login', [AuthController::class, 'login'])->name('login'); 
+Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 
 

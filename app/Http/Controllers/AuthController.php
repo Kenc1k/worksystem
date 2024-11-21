@@ -21,10 +21,8 @@ class AuthController extends Controller
             $user = Auth::user();
     
             if ($user->role === 'admin') {
-                // Redirect to admin page
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('users.index');
             } elseif ($user->role === 'user') {
-                // Redirect to user's task page
                 return redirect()->route('topshiriq.myTasks');
             } else {
                 Auth::logout();

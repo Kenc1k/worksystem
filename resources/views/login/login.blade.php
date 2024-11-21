@@ -23,7 +23,7 @@
                     </div>
                 @endif
 
-                <form action="{{route('loginPage')}}" method="POST">
+                <form action="{{route('login')}}" method="POST">
                     <h3 class="text-center mb-4">Login</h3>
                     @csrf
                     <div class="form-outline mb-4">

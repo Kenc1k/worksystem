@@ -15,10 +15,27 @@ class TopshiriqController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Topshiriq::all();
-        return view('topshiriq.index' , compact('tasks'));
+        // Get filter inputs
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
+
+        // Query tasks with optional date filters
+        $tasks = Topshiriq::query();
+
+        if ($fromDate) {
+            $tasks->where('muddat', '>=', $fromDate);
+        }
+
+        if ($toDate) {
+            $tasks->where('muddat', '<=', $toDate);
+        }
+
+        // Execute the query and load related categories
+        $tasks = $tasks->with('category')->get();
+
+        return view('topshiriq.index', compact('tasks'));
     }
     
     /**
