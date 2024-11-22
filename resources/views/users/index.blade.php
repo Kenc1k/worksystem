@@ -6,18 +6,23 @@
             <div class="col-12">
                 <h1 align='center'>Users</h1>
 
-                <a href="{{route('users.create')}}" class="btn btn-primary mb-3">Create user</a>
+                <!-- Logout Button -->
+                <form action="{{ route('logout') }}" method="POST" class="mb-3 text-end">
+                    @csrf
+                    <button type="submit" class="btn btn-secondary">Logout</button>
+                </form>
+
+                <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Create user</a>
                 <table class="table">
                     <thead>
-                      <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Password</th>
-                        <th scope="col">Role</th>
-                        <th scope="col">Delete</th>
-                        <th scope="col">Update</th>
-                      </tr>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Delete</th>
+                            <th scope="col">Update</th>
+                        </tr>
                     </thead>
                     <tbody>
                         @foreach ($users as $user)
@@ -25,7 +30,6 @@
                                 <td>{{ $user->id }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>{{ $user->password }}</td>
                                 <td>{{ $user->role }}</td>
                                 <td>
                                     <form action="{{ route('users.destroy', $user->id) }}" method="POST">
@@ -40,7 +44,7 @@
                             </tr>
                         @endforeach
                     </tbody>
-                  </table>
+                </table>
             </div>
         </div>
     </div>

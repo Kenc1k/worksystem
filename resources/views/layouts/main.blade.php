@@ -70,7 +70,7 @@
                           <a href="{{ route('category.index') }}" class="nav-link">
                               <i class="far fa-circle nav-icon"></i>
                               <p>Categories</p>
-                          </a>
+                           </a>
                       </li>
                       <li class="nav-item">
                           <a href="{{ route('hudud.index') }}" class="nav-link">
@@ -89,7 +89,7 @@
           @else
               <li class="nav-item">
                   <a href="{{ route('topshiriq.myTasks') }}" class="nav-link">
-                      <i class="far fa-circle nav-icon"></i>
+                      <i class="far fa-circle nav-icon "></i>
                       <p>My Tasks</p>
                   </a>
               </li>

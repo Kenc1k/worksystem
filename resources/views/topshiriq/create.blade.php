@@ -34,19 +34,20 @@
             </div>
 
             <div class="form-group">
-                <label for="file">File</label>
-                <input type="file" name="file" id="file" class="form-control" required>
+                <label for="file">Upload File</label>
+                <input type="file" id="file" name="file" class="form-control">
             </div>
+                    
 
             <div class="form-group">
-                <label for="hudud_id">Hududs</label>
-                <select name="hudud_id[]" id="hudud_id" class="form-control" multiple required>
+                <label for="hududs">Assign to Hududs</label>
+                <select name="hududs[]" id="hududs" class="form-control" multiple required>
                     @foreach($hududs as $hudud)
                         <option value="{{ $hudud->id }}">{{ $hudud->name }}</option>
                     @endforeach
                 </select>
-                
             </div>
+            
 
             <button type="submit" class="btn btn-success mt-3">Create Task</button>
         </form>

@@ -1,61 +1,233 @@
 <!-- resources/views/topshiriq/index.blade.php -->
-
 @extends('layouts.main')
 
 @section('content')
-    <div class="container">
-        <h1>Task List</h1>
-        <a href="{{ route('topshiriq.create') }}" class="btn btn-primary">Create New Task</a>
-
-        <!-- Filter Form -->
-        <form action="{{ route('topshiriq.index') }}" method="GET" class="mt-3">
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="from_date">From Date:</label>
-                    <input type="date" id="from_date" name="from_date" class="form-control" value="{{ request('from_date') }}">
+<div class="container">
+    <!-- Statistics Boxes -->
+    <div class="row mt-3">
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3>{{ $statistics['total'] }}</h3>
+                    <p>Hammasi</p>
                 </div>
-                <div class="col-md-3">
-                    <label for="to_date">To Date:</label>
-                    <input type="date" id="to_date" name="to_date" class="form-control" value="{{ request('to_date') }}">
-                </div>
-                <div class="col-md-2">
-                    <label>&nbsp;</label>
-                    <button type="submit" class="btn btn-success btn-block">Filter</button>
+                <div class="icon">
+                    <i class="fas fa-tasks"></i>
                 </div>
             </div>
-        </form>
+        </div>
 
-        <!-- Task Table -->
-        <table class="table mt-3">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Ijrochi</th>
-                    <th scope="col">Muddat</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($tasks as $task)
-                    <tr>
-                        <td>{{ $task->id }}</td>
-                        <td>{{ $task->title }}</td>
-                        <td>{{ $task->category->name ?? 'N/A' }}</td>
-                        <td>{{ $task->ijrochi }}</td>
-                        <td>{{ $task->muddat }}</td>
-                        <td>
-                            <a href="{{ route('topshiriq.edit', $task->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('topshiriq.destroy', $task->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3>{{ $statistics['twoDaysLater'] }}</h3>
+                    <p>2 kun qolgan</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3>{{ $statistics['tomorrow'] }}</h3>
+                    <p>Ertaga</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3>{{ $statistics['rejected'] }}</h3>
+                    <p>Qaytarilgan</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Header and Create Button -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h1 class="h3">Topshiriqlar ro'yxati</h1>
+        </div>
+        <div class="col-md-6 text-right">
+            <a href="{{ route('topshiriq.create') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Yangi topshiriq
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Form -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form action="{{ route('topshiriq.index') }}" method="GET" class="row align-items-end">
+                <div class="col-md-4">
+                    <div class="form-group mb-0">
+                        <label for="from_date">Boshlanish sanasi:</label>
+                        <input type="date" id="from_date" name="from_date" 
+                               class="form-control" 
+                               value="{{ request('from_date') }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-0">
+                        <label for="to_date">Tugash sanasi:</label>
+                        <input type="date" id="to_date" name="to_date" 
+                               class="form-control" 
+                               value="{{ request('to_date') }}">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-0">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-filter"></i> Filterlash
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tasks Table -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Sarlavha</th>
+                            <th>Kategoriya</th>
+                            <th>Hudud</th>
+                            <th>Ijrochi</th>
+                            <th>Fayl</th>
+                            <th>Muddat</th>
+                            <th>Status</th>
+                            <th>Amallar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($tasks as $task)
+                            <tr>
+                                <td>{{ $task->id }}</td>
+                                <td>{{ $task->title }}</td>
+                                <td>{{ $task->category->name ?? 'N/A' }}</td>
+                                <td>
+                                    @foreach($task->hududTopshiriqs as $hududTopshiriq)
+                                        <div class="mb-1">
+                                            <span class="badge badge-info">
+                                                {{ $hududTopshiriq->hudud->name ?? 'N/A' }}
+                                            </span>
+                                            <span class="badge {{ $hududTopshiriq->status_badge_class }}">
+                                                {{ $hududTopshiriq->status_label }}
+                                            </span>
+                                        </div>
+                                    @endforeach
+                                </td>
+                                <td>{{ $task->ijrochi }}</td>
+                                <td class="text-center">
+                                    @if($task->file)
+                                        <a href="{{ asset('storage/' . $task->file) }}" 
+                                           target="_blank" 
+                                           class="btn btn-sm btn-info">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    @else
+                                        <span class="badge badge-secondary">Fayl yo'q</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    {{ \Carbon\Carbon::parse($task->muddat)->format('d.m.Y') }}
+                                    @if(\Carbon\Carbon::parse($task->muddat)->isPast())
+                                        <span class="badge badge-danger">Muddat o'tgan</span>
+                                    @elseif(\Carbon\Carbon::parse($task->muddat)->isToday())
+                                        <span class="badge badge-warning">Bugun</span>
+                                    @elseif(\Carbon\Carbon::parse($task->muddat)->isTomorrow())
+                                        <span class="badge badge-info">Ertaga</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @foreach($task->hududTopshiriqs as $hududTopshiriq)
+                                        <span class="badge {{ $hududTopshiriq->status_badge_class }}">
+                                            {{ $hududTopshiriq->status_label }}
+                                        </span>
+                                    @endforeach
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="{{ route('topshiriq.edit', $task->id) }}" 
+                                           class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form action="{{ route('topshiriq.destroy', $task->id) }}" 
+                                              method="POST" 
+                                              class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" 
+                                                    class="btn btn-sm btn-danger" 
+                                                    onclick="return confirm('Rostdan ham o\'chirmoqchimisiz?')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="9" class="text-center">Topshiriqlar topilmadi</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('styles')
+<style>
+    .small-box {
+        border-radius: 0.25rem;
+        box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+        position: relative;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .small-box .inner {
+        padding: 10px;
+    }
+    
+    .small-box .icon {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 50px;
+        opacity: 0.3;
+    }
+    
+    .small-box h3 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin: 0 0 10px 0;
+        white-space: nowrap;
+        padding: 0;
+    }
+    
+    .small-box p {
+        font-size: 1rem;
+        margin-bottom: 0;
+    }
+</style>
+@endpush
 @endsection

@@ -27,13 +27,21 @@ class Topshiriq extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function hududTopshiriq()
+    public function hududTopshiriqs()
     {
         return $this->hasMany(HududTopshiriq::class);
     }
+
+    // Helper method to get the latest status
+    public function getLatestStatusAttribute()
+    {
+        return $this->hududTopshiriqs->last()?->status ?? 'new';
+    }
     public function hududs()
     {
-        return $this->belongsToMany(Hudud::class, 'hudud_topshiriqs', 'topshiriq_id', 'hudud_id');
+        return $this->belongsToMany(Hudud::class, 'hudud_topshiriqs');
     }
+    
+    
     
 }

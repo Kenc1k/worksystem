@@ -39,7 +39,7 @@ class HududController extends Controller
 
         Hudud::create($data);
 
-        return redirect('/hudud');
+        return redirect()->route('hudud.index');
     }
 
     /**

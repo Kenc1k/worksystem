@@ -55,4 +55,25 @@ class User extends Authenticatable
     {
         return $this->hasMany(Topshiriq::class); // Replace `Topshiriq` with the actual task model name
     }
+    // User.php
+    public function hududs()
+    {
+        return $this->hasMany(Hudud::class);
+    }
+    
+    
+    public function tasks()
+    {
+        return $this->hasManyThrough(
+            Topshiriq::class,
+            Hudud::class,
+            'user_id',    // Foreign key on 'hududs' table
+            'id',         // Foreign key on 'topshiriqs' table
+            'id',         // Local key on 'users' table
+            'topshiriq_id' // Local key on 'hududs' table
+        );
+    }
+    
+    
+
 }

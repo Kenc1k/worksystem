@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->string('ijrochi');
             $table->string('title');
-            $table->string('file');
+            $table->string('file')->nullable();
             $table->date('muddat');
             $table->timestamps();
         });

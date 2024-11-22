@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -42,7 +43,7 @@ class UserController extends Controller
 
         User::create($data);
 
-        return redirect('/users');
+        return redirect()->route('users.index');
     }
 
     /**
@@ -97,7 +98,11 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
-        return redirect('/users');
+        return redirect()->route('users.index');
     }
-    
+    public function logout()
+    {
+        Auth::logout(); // Log the user out
+        return redirect()->route('loginPage')->with('success', 'Logged out successfully'); 
+    }
 }
