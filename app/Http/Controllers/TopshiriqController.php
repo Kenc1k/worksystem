@@ -18,67 +18,78 @@ class TopshiriqController extends Controller
      * Display a listing of the resource.
      */
 
-
      public function index(Request $request)
      {
-         // Get filter inputs
          $fromDate = $request->input('from_date');
          $toDate = $request->input('to_date');
- 
-         // Base query for filtered tasks
-         $tasks = Topshiriq::query()
-             ->with(['category', 'hududTopshiriqs.hudud']);
- 
-         // Apply date filters if provided
+         $status = $request->input('status');
+     
+         // Query tasks with relationships
+         $tasks = Topshiriq::query()->with(['category', 'hududTopshiriqs.hudud']);
+     
+         // Apply date filters
          if ($fromDate) {
              $tasks->where('muddat', '>=', $fromDate);
          }
          if ($toDate) {
              $tasks->where('muddat', '<=', $toDate);
          }
- 
-         // Calculate statistics
+     
+         // Apply status filter for 'rejected'
+         if ($status === 'rejected') {
+             $tasks->whereHas('hududTopshiriqs', function ($query) {
+                 $query->where('status', HududTopshiriq::STATUS_REJECTED)
+                       ->orWhere(function ($query) {
+                           $query->whereHas('topshiriq', function ($q) {
+                               $q->whereDate('muddat', '<', now());
+                           })->where('status', HududTopshiriq::STATUS_SEND);
+                       });
+             });
+         }
+     
+         // Get current timestamp
          $now = Carbon::now();
+     
+         // Task statistics
          $statistics = [
-             // Total tasks
              'total' => Topshiriq::count(),
-             
-             // Tasks due in 2 days
              'twoDaysLater' => Topshiriq::whereDate('muddat', $now->copy()->addDays(2))
-                 ->whereHas('hududTopshiriqs', function($query) {
+                 ->whereHas('hududTopshiriqs', function ($query) {
                      $query->where('status', HududTopshiriq::STATUS_SEND);
                  })->count(),
-             
-             // Tasks due tomorrow
              'tomorrow' => Topshiriq::whereDate('muddat', $now->copy()->addDay())
-                 ->whereHas('hududTopshiriqs', function($query) {
+                 ->whereHas('hududTopshiriqs', function ($query) {
                      $query->where('status', HududTopshiriq::STATUS_SEND);
                  })->count(),
-             
-             // Rejected and expired tasks
              'rejected' => HududTopshiriq::where('status', HududTopshiriq::STATUS_REJECTED)
-                 ->orWhere(function($query) use ($now) {
-                     $query->whereHas('topshiriq', function($q) use ($now) {
+                 ->orWhere(function ($query) use ($now) {
+                     $query->whereHas('topshiriq', function ($q) use ($now) {
                          $q->whereDate('muddat', '<', $now);
                      })->where('status', HududTopshiriq::STATUS_SEND);
-                 })->count()
+                 })->count(),
          ];
- 
+     
+         // Fetch tasks
          $tasks = $tasks->get();
- 
-         // Mark expired tasks
-         $tasks->each(function($task) use ($now) {
+     
+         // Update the status of expired tasks
+         $tasks->each(function ($task) use ($now) {
              if ($task->muddat < $now && $task->hududTopshiriqs->contains('status', HududTopshiriq::STATUS_SEND)) {
-                 $task->hududTopshiriqs->each(function($hududTopshiriq) {
+                 $task->hududTopshiriqs->each(function ($hududTopshiriq) {
                      if ($hududTopshiriq->status === HududTopshiriq::STATUS_SEND) {
                          $hududTopshiriq->update(['status' => HududTopshiriq::STATUS_EXPIRED]);
                      }
                  });
              }
          });
- 
+     
+         // Return data to the view
          return view('topshiriq.index', compact('tasks', 'statistics'));
      }
+     
+     
+     
+     
     
     /**
      * Show the form for creating a new resource.

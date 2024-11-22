@@ -6,7 +6,7 @@
     <!-- Statistics Boxes -->
     <div class="row mt-3">
         <div class="col-lg-3 col-6">
-            <div class="small-box bg-info">
+            <a href="{{ route('topshiriq.index') }}" class="small-box bg-info">
                 <div class="inner">
                     <h3>{{ $statistics['total'] }}</h3>
                     <p>Hammasi</p>
@@ -14,11 +14,12 @@
                 <div class="icon">
                     <i class="fas fa-tasks"></i>
                 </div>
-            </div>
+            </a>
+            
         </div>
-
+    
         <div class="col-lg-3 col-6">
-            <div class="small-box bg-warning">
+            <a href="{{ route('topshiriq.index', ['from_date' => now()->addDays(2)->toDateString(), 'to_date' => now()->addDays(2)->toDateString()]) }}" class="small-box bg-warning">
                 <div class="inner">
                     <h3>{{ $statistics['twoDaysLater'] }}</h3>
                     <p>2 kun qolgan</p>
@@ -26,11 +27,11 @@
                 <div class="icon">
                     <i class="fas fa-clock"></i>
                 </div>
-            </div>
+            </a>
         </div>
-
+    
         <div class="col-lg-3 col-6">
-            <div class="small-box bg-success">
+            <a href="{{ route('topshiriq.index', ['from_date' => now()->addDay()->toDateString(), 'to_date' => now()->addDay()->toDateString()]) }}" class="small-box bg-success">
                 <div class="inner">
                     <h3>{{ $statistics['tomorrow'] }}</h3>
                     <p>Ertaga</p>
@@ -38,11 +39,11 @@
                 <div class="icon">
                     <i class="fas fa-calendar-day"></i>
                 </div>
-            </div>
+            </a>
         </div>
-
+    
         <div class="col-lg-3 col-6">
-            <div class="small-box bg-danger">
+            <a href="{{ route('topshiriq.index', ['status' => 'rejected']) }}" class="small-box bg-danger">
                 <div class="inner">
                     <h3>{{ $statistics['rejected'] }}</h3>
                     <p>Qaytarilgan</p>
@@ -50,9 +51,10 @@
                 <div class="icon">
                     <i class="fas fa-exclamation-circle"></i>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
+    
 
     <!-- Header and Create Button -->
     <div class="row mb-3">
