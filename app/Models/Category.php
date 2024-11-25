@@ -17,4 +17,10 @@ class Category extends Model
     {
         return $this->hasMany(Topshiriq::class);
     }
+    // Category.php
+    public function hududs()
+    {
+        return $this->belongsToMany(Hudud::class)->withPivot('status');
+    }
+
 }

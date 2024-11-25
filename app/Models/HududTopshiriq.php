@@ -12,6 +12,7 @@ class HududTopshiriq extends Model
     protected $fillable = [
         'hudud_id',
         'topshiriq_id',
+        'category_id',
         'status'
     ];
 
@@ -40,7 +41,7 @@ class HududTopshiriq extends Model
 
     public function topshiriq()
     {
-        return $this->belongsTo(Topshiriq::class);
+        return $this->belongsTo(Topshiriq::class, 'topshiriq_id');
     }
 
     // Helper method to get status label
@@ -59,5 +60,9 @@ class HududTopshiriq extends Model
             self::STATUS_EXPIRED => 'badge-warning',
             default => 'badge-secondary'
         };
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'hudud_id'); // Assuming 'hudud_id' links to the user
     }
 }

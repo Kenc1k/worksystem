@@ -27,6 +27,10 @@ class Topshiriq extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function hududTopshiriq()
+    {
+        return $this->hasMany(HududTopshiriq::class, 'topshiriq_id');
+    }
     public function hududTopshiriqs()
     {
         return $this->hasMany(HududTopshiriq::class);
@@ -39,8 +43,11 @@ class Topshiriq extends Model
     }
     public function hududs()
     {
-        return $this->belongsToMany(Hudud::class, 'hudud_topshiriqs');
+        return $this->belongsToMany(Hudud::class, 'hudud_topshiriqs')
+                    ->withPivot('status');
     }
+    
+    
     
     
     

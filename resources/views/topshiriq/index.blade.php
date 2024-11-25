@@ -2,8 +2,68 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="container">
-    <!-- Statistics Boxes -->
+<nav class="main-header navbar navbar-expand navbar-dark mb-5">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="index3.html" class="nav-link">Home</a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Contact</a>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <!-- Messages Dropdown Menu -->
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+          <i class="far fa-comments"></i>
+          <span class="badge badge-danger navbar-badge">{{$hududTopshiriq->where('status' , 'done')->count()}}</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+            @forelse($messages as $message)
+                <a href="#" class="dropdown-item">
+                    <!-- Message Start -->
+                    <div class="media">
+                        {{-- <img src="{{ $message->user->avatar ?? asset('dist/img/default-avatar.png') }}"  --}}
+                             {{-- alt="User Avatar" 
+                             class="img-size-50 mr-3 img-circle"> --}}
+                        <div class="media-body">
+                            <h3 class="dropdown-item-title">
+                                {{ $message->user->name ?? 'Unknown User' }}
+                                <span class="float-right text-sm text-{{ $message->priority == 'high' ? 'danger' : 'muted' }}">
+                                    <i class="fas fa-star"></i>
+                                </span>
+                            </h3>
+                            <p class="text-sm">{{ $message->content ?? 'No content available' }}</p>
+                            <p class="text-sm text-muted">
+                                <i class="far fa-clock mr-1"></i> {{ $message->created_at->diffForHumans() }}
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Message End -->
+                </a>
+                <div class="dropdown-divider"></div>
+            @empty
+                <div class="dropdown-item text-center text-muted">
+                    No messages available
+                </div>
+            @endforelse
+            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+        </div>
+        
+        
+      </li>
+    </ul>
+  </nav>
+<div class="container mt-5">
+    
+    <div class="container-fluid">
+
     <div class="row mt-3">
         <div class="col-lg-3 col-6">
             <a href="{{ route('topshiriq.index') }}" class="small-box bg-info">
@@ -130,7 +190,7 @@
                                                 {{ $hududTopshiriq->hudud->name ?? 'N/A' }}
                                             </span>
                                             <span class="badge {{ $hududTopshiriq->status_badge_class }}">
-                                                {{ $hududTopshiriq->status_label }}
+                                                {{ $hududTopshiriq->status }}
                                             </span>
                                         </div>
                                     @endforeach
@@ -160,10 +220,11 @@
                                 <td>
                                     @foreach($task->hududTopshiriqs as $hududTopshiriq)
                                         <span class="badge {{ $hududTopshiriq->status_badge_class }}">
-                                            {{ $hududTopshiriq->status_label }}
+                                            {{ $hududTopshiriq->status }}
                                         </span>
                                     @endforeach
                                 </td>
+                                
                                 <td>
                                     <div class="btn-group">
                                         <a href="{{ route('topshiriq.edit', $task->id) }}" 
@@ -193,6 +254,7 @@
                 </table>
             </div>
         </div>
+    </div>
     </div>
 </div>
 

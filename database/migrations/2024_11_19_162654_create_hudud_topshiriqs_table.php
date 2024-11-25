@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('hudud_id')->constrained('hududs')->onDelete('cascade');
             $table->foreignId('topshiriq_id')->constrained('topshiriqs')->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->string('status')->default('send');
             $table->timestamps();
         });

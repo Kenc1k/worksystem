@@ -7,10 +7,8 @@ use App\Models\Hudud;
 use App\Models\HududTopshiriq;
 use App\Models\Topshiriq;
 use Carbon\Carbon;
-use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
-use Illuminate\Support\Facades\Storage;
 
 class TopshiriqController extends Controller
 {
@@ -82,14 +80,12 @@ class TopshiriqController extends Controller
                  });
              }
          });
-     
-         // Return data to the view
-         return view('topshiriq.index', compact('tasks', 'statistics'));
+         $messages = HududTopshiriq::with('user') // Eager load the user relationship
+         ->where('status', 'done')
+         ->get();
+         $hududTopshiriq = HududTopshiriq::all();
+         return view('topshiriq.index', compact('tasks', 'statistics', 'messages', 'hududTopshiriq'));
      }
-     
-     
-     
-     
     
     /**
      * Show the form for creating a new resource.
@@ -140,11 +136,18 @@ class TopshiriqController extends Controller
     }
     
     
-    
-    
-    
-    
+    public function status($id, $status)
+    {
+        // Find the task by ID
+        $task = Topshiriq::findOrFail($id);
 
+        // Check the status and update
+        $task->hududTopshiriqs->each(function ($hududTopshiriq) use ($status) {
+            $hududTopshiriq->update(['status' => $status]);
+        });
+
+        return redirect()->route('topshiriq.index')->with('success', 'Task status updated successfully.');
+    }
 
     /**
      * Display the specified resource.
@@ -161,7 +164,14 @@ class TopshiriqController extends Controller
     {
         $hududs = Hudud::all();
         $categories = Category::all();
-        return view('topshiriq.edit' , compact('hududs' , 'categories' , 'topshiriq'));
+        $statuses = [
+            'sent' => ['label' => 'Sent', 'color' => 'blue'],
+            'opened' => ['label' => 'Opened', 'color' => 'orange'],
+            'done' => ['label' => 'Done', 'color' => 'green'],
+            'rejected' => ['label' => 'Rejected', 'color' => 'red'],
+            'approved' => ['label' => 'Approved', 'color' => 'purple'],
+        ];
+        return view('topshiriq.edit' , compact('hududs' , 'categories' , 'topshiriq' , 'statuses'));
     }
 
     /**
@@ -170,30 +180,43 @@ class TopshiriqController extends Controller
     public function update(Request $request, $id)
     {
         $task = Topshiriq::findOrFail($id);
-    
+        
         $request->validate([
             'title' => 'required',
             'category_id' => 'nullable|exists:categories,id',
             'ijrochi' => 'required',
             'file' => 'nullable|file|mimes:pdf,docx,jpeg,png|max:2048',
             'muddat' => 'required|date',
+            'status' => 'nullable|string', // Validation for status
         ]);
-    
+        
         if ($request->hasFile('file')) {
             // Delete the old file if it exists
             if ($task->file && file_exists(public_path($task->file))) {
                 unlink(public_path($task->file));
             }
-    
+        
             $file = $request->file('file');
             $task->file = 'topshiriq/' . $file->getClientOriginalName();
             $file->move(public_path('topshiriq'), $file->getClientOriginalName()); // Save to /public/topshiriq
         }
-    
+        
+        // Update the task itself
         $task->update($request->only('title', 'category_id', 'ijrochi', 'muddat'));
-    
+        
+        // Update the status in the related hudud_topshiriqs table
+        if ($request->has('status')) {
+            // Find the related hudud_topshiriq entry and update the status
+            $hududTopshiriq = HududTopshiriq::where('topshiriq_id', $id)->first();
+            if ($hududTopshiriq) {
+                $hududTopshiriq->status = $request->status;
+                $hududTopshiriq->save();
+            }
+        }
+        
         return redirect()->route('topshiriq.index')->with('success', 'Task updated successfully.');
     }
+    
     
     
     
@@ -253,4 +276,19 @@ class TopshiriqController extends Controller
     
         return view('user_task.topshiriq', compact('tasks'));
     }
+    // public function status($id, $status)
+    // {
+    //     // Find the task by ID
+    //     $task = Topshiriq::findOrFail($id);
+
+    //     // Update the status of the task
+    //     // You can customize this logic to check for specific conditions based on your status logic
+    //     $task->hududTopshiriqs->each(function ($hududTopshiriq) use ($status) {
+    //         $hududTopshiriq->update(['status' => $status]);
+    //     });
+
+    //     // Redirect back with success message
+    //     return redirect()->route('topshiriq.index')->with('success', 'Task status updated successfully.');
+    // }
+
 }

@@ -41,8 +41,16 @@ class Hudud extends Model
     }
     public function topshiriqs()
     {
-        return $this->hasMany(HududTopshiriq::class);
+        return $this->belongsToMany(Topshiriq::class, 'hudud_topshiriqs')
+                    ->withPivot('status');
     }
+    
+    // Hudud.php
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class)->withPivot('status');
+    }
+
 
 
 }

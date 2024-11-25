@@ -74,6 +74,9 @@ class User extends Authenticatable
         );
     }
     
-    
+    public function hududTopshiriqs()
+    {
+        return $this->hasMany(HududTopshiriq::class, 'hudud_id');
+    }
 
 }

@@ -17,7 +17,7 @@
     <img class="animation__wobble" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
   </div>
 
-
+  
 
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="index3.html" class="brand-link">
@@ -84,6 +84,18 @@
                               <p>Topshiriq</p>
                           </a>
                       </li>
+                      <li class="nav-item">
+                        <a href="{{ route('admin.index') }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Boshqaruv</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="{{route('review')}}" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Review</p>
+                      </a>
+                  </li>
                   </ul>
               </li>
           @else
