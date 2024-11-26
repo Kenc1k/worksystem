@@ -2,7 +2,7 @@
 @extends('layouts.main')
 
 @section('content')
-<nav class="main-header navbar navbar-expand navbar-dark mb-5">
+<nav class="main-header navbar navbar-expand navbar-dark">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -15,10 +15,7 @@
         <a href="#" class="nav-link">Contact</a>
       </li>
     </ul>
-
-    <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-      <!-- Messages Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-comments"></i>
@@ -29,9 +26,7 @@
                 <a href="#" class="dropdown-item">
                     <!-- Message Start -->
                     <div class="media">
-                        {{-- <img src="{{ $message->user->avatar ?? asset('dist/img/default-avatar.png') }}"  --}}
-                             {{-- alt="User Avatar" 
-                             class="img-size-50 mr-3 img-circle"> --}}
+
                         <div class="media-body">
                             <h3 class="dropdown-item-title">
                                 {{ $message->user->name ?? 'Unknown User' }}
@@ -59,7 +54,8 @@
         
       </li>
     </ul>
-  </nav>
+</nav>
+<br>
 <div class="container mt-5">
     
     <div class="container-fluid">

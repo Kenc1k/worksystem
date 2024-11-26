@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\HududStore;
+use App\Http\Requests\HududUpdate;
 use App\Models\Hudud;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -30,14 +32,10 @@ class HududController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(HududStore $request)
     {   
-        $data = $request->validate([
-            'user_id'=>'required',
-            'name'=>'required',
-        ]);
 
-        Hudud::create($data);
+        Hudud::create($request->all());
 
         return redirect()->route('hudud.index');
     }
@@ -63,15 +61,10 @@ class HududController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(HududUpdate $request, $id)
     {
-        $data = $request->validate([
-            'user_id'=>'required',
-            'name'=>'required',
-        ]);
-
         $hudud = Hudud::findOrFail($id);
-        $hudud->update($data);
+        $hudud->update($request->all());
 
         return redirect('/hudud');
     }

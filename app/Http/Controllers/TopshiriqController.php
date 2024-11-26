@@ -108,7 +108,7 @@ class TopshiriqController extends Controller
             'hududs' => 'required|array',
             'hududs.*' => 'exists:hududs,id',
         ]);
-    
+    // buni qanday qilib validatisini requestdan olib kelishni bilmadim lekin requestga oldim 
         $filePath = null;
     
         if ($request->hasFile('file')) {
@@ -213,7 +213,7 @@ class TopshiriqController extends Controller
                 $hududTopshiriq->save();
             }
         }
-        
+        //updateda ham shunday 
         return redirect()->route('topshiriq.index')->with('success', 'Task updated successfully.');
     }
     

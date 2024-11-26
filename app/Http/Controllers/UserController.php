@@ -75,7 +75,6 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email,' . $user->id, // Ensure email is unique, except for current user
             'role' => 'required',
-            // Only validate password if it's provided in the request
             'password' => 'nullable|min:8',
         ]);
 
